@@ -7,15 +7,26 @@ import { ForgotPasswordComponent } from './components/forgotpassword/forgotpassw
 import { PositionsComponent } from './components/positions/positions.component';
 import { DepartmentsComponent } from './components/departments/departments.component';
 import { EmployeeManagementModule } from './employee-management/employee-management.module';
+import { EmployeesComponent } from './employee-management/employees/employees.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HomeComponent, LoginComponent,
-    RegisterComponent, ForgotPasswordComponent, PositionsComponent,
-    DepartmentsComponent, EmployeeManagementModule],
+  imports: [
+    RouterOutlet,
+    HomeComponent,
+    LoginComponent,
+    RegisterComponent,
+    ForgotPasswordComponent,
+    DepartmentsComponent,
+    EmployeeManagementModule,
+    EmployeesComponent,
+    CommonModule,
+    PositionsComponent,
+  ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
   title = 'InternProject';

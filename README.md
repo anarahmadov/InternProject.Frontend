@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+
 # InternProject
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.1.
@@ -25,7 +26,8 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 
 ## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
-=======
+# To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
 # InternProject.Frontend
->>>>>>> 4c3427a3bfe21b04762910c15d8f0be4c9a80d2d
+
+> > > > > > > 4c3427a3bfe21b04762910c15d8f0be4c9a80d2d

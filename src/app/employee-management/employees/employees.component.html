@@ -1,0 +1,26 @@
+<div class="table-container">
+  <h2>Employees</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Employee Name</th>
+        <th>Email</th>
+        <th>Position</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let employee of employees; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ employee.name }}</td>
+        <td>{{ employee.email }}</td>
+        <td>{{ employee.position }}</td>
+        <td>
+          <button (click)="editEmployee(employee)">Edit</button>
+          <button (click)="deleteEmployee(employee)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

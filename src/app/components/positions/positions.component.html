@@ -1,1 +1,19 @@
-<p>positions works!</p>
+<div class="table-container">
+  <h2>Positions</h2>
+  <table class="table">
+    <thead>
+      <th *ngFor="let column of positionColumns">{{ column | uppercase }}</th>
+      <th>/</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let position of positions; let i = index">
+        <td>{{ position.id }}</td>
+        <td>{{ position.name }}</td>
+        <td>
+          <button (click)="editPosition(position)">Edit</button>
+          <button (click)="deletePosition(position)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
