@@ -1,10 +1,43 @@
-<app-home>
-  <app-login></app-login>
-  <app-register></app-register>
-  <app-forgot-password></app-forgot-password>
-  <app-departments></app-departments>
-  <app-positions></app-positions>
-  <app-employees></app-employees>
-</app-home>
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/employees" routerLinkActive="active">
+                <i class="mdi mdi-grid-large menu-icon"></i>
+                <span class="menu-title">Employees</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/login" routerLinkActive="active">
+                <span class="menu-title">Login</span>
+                <i class="menu-arrow"></i>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/register" routerLinkActive="active">
+                <i class="menu-icon mdi mdi-card-text-outline"></i>
+                <span class="menu-title">Register</span>
+                <i class="menu-arrow"></i>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLink="positions">
+                <i class="menu-icon mdi mdi-chart-line"></i>
+                <span class="menu-title">Positions</span>
+                <i class="menu-arrow"></i>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLink="departments">
+                <i class="menu-icon mdi mdi-table"></i>
+                <span class="menu-title">Departments</span>
+                <i class="menu-arrow"></i>
+            </a>
+        </li>
+    </ul>
+</nav>
 
-<router-outlet></router-outlet>
+<div class="container">
+    <div class="main">
+        <router-outlet></router-outlet>
+    </div>
+</div>

@@ -1,44 +1,77 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { Department, Employee, Position } from '../../entities.type';
+import { AfterViewInit, Component, inject, signal } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PositionService } from '../../services/position.service';
-import { AuthService } from '../../services/auth.service';
-import { ApiResultGen } from '../../models/apiresult.model';
+import { Position } from '../../entities.type';
+import { CommonModule } from '@angular/common';
+import { AppModalComponent } from '../../shared/modals/app-modal/app-modal.component';
 
 @Component({
   selector: 'app-positions',
   templateUrl: './positions.component.html',
-  styleUrls: ['./positions.component.css'],
+  styleUrls: ['./positions.component.scss'],
   standalone: true,
-  imports: [CommonModule],
-  providers: [PositionService, AuthService]
+  imports: [CommonModule, AppModalComponent],
 })
-export class PositionsComponent implements OnInit {
-  private positionService: PositionService = inject(PositionService)
-  positions!: Position[];
-  positionColumns!: string[];
+export class PositionsComponent implements AfterViewInit {
+  private positionService: PositionService = inject(PositionService);
+  positions: Position[] = [];
+  selectedPosition?: Position;
 
-  ngOnInit(): void {
-    this.positionService.getAll().subscribe((apiResponse) =>
-    {
-      let response = (apiResponse as ApiResultGen<Position[]>);
-      
-      this.positions = response.succeeded ? response.result : new Array();
-      this.positionColumns = Object.keys(response.result[0]);
-    })
+  isCreateOpen: boolean = false;
+  isUpdateOpen: boolean = false;
+  isDeleteOpen: boolean = false;
+
+  modalFields = [{ name: 'name', label: 'Position name', type: 'text' }];
+
+  ngAfterViewInit() {
+    this.loadPositions();
   }
 
-  editPosition(position: any) {
-    const index = this.positions.indexOf(position, 0);
-    if (index > -1) {
-      this.positions.splice(index, position);
+  loadPositions() {
+    this.positionService.loadPositions();
+    this.positionService.positions$.subscribe((positions) => {
+      this.positions = positions;
+    });
+  }
+
+  openCreateModal() {
+    this.selectedPosition = undefined;
+    this.isCreateOpen = true;
+  }
+
+  openUpdateModal(position: Position) {
+    this.selectedPosition = position;
+    this.isUpdateOpen = true;
+  }
+
+  openDeleteModal(position: Position) {
+    this.selectedPosition = position;
+    this.isDeleteOpen = true;
+  }
+
+  closeModal() {
+    this.selectedPosition = undefined;
+    this.isCreateOpen = false;
+    this.isDeleteOpen = false;
+    this.isUpdateOpen = false;
+  }
+
+  onCreate(positionData: Position) {
+    this.positionService.addPosition(positionData);
+    this.isCreateOpen = false;
+  }
+
+  onUpdate(positionData: Position) {
+    if (this.selectedPosition) {
+      this.positionService.edit(positionData);
     }
+    this.isUpdateOpen = false;
   }
 
-  deletePosition(position: any) {
-    const index = this.positions.indexOf(position, 0);
-    if (index > -1) {
-      this.positions.splice(index, 1);
+  onDelete(id?: number) {
+    if (id) {
+      this.positionService.deletePosition(id);
+      this.isDeleteOpen = false;
     }
   }
 }

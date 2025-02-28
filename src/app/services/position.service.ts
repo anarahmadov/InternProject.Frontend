@@ -1,9 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { Position } from '../entities.type';
 import { AuthService } from './auth.service';
-import { ApiResultGen } from '../models/apiresult.model';
+import { BehaviorSubject } from 'rxjs';
+import { ApiResult, ApiResultGen } from '../models/apiresult.model';
 
 @Injectable()
 export class PositionService {
@@ -11,34 +12,86 @@ export class PositionService {
   private authToken: string | null = localStorage.getItem('authToken');
   private authService: AuthService = inject(AuthService);
   private http: HttpClient = inject(HttpClient);
+  private positionsSubject = new BehaviorSubject<any[]>([]);
+  positions$ = this.positionsSubject.asObservable();
 
-  getAll(): Observable<ApiResultGen<Position[]>> {
+  loadPositions() {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: this.authToken ? 'Bearer ' + this.authToken : '',
     });
-    return this.http.get<ApiResultGen<Position[]>>(`${this.apiUrl}/all`, {
-      headers,
-    });
+
+    this.http
+      .get<ApiResultGen<Position[]>>(`${this.apiUrl}/all`, { headers })
+      .subscribe((response) => {
+        if (response.succeeded) this.positionsSubject.next(response.result);
+      });
   }
 
-  edit(position: Position): Observable<any> {
+  edit(position: Position) {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: this.authToken ? 'Bearer ' + this.authToken : '',
     });
-    return this.http.put(this.apiUrl, position, { headers });
+
+    this.http
+      .put<ApiResultGen<Position>>(this.apiUrl, position, { headers })
+      .subscribe((response) =>
+      {
+        if (response.succeeded) {
+          let updatedPosition = response.result;
+          const updatedPositions = this.positionsSubject.value.map((pos) =>
+            pos.id === position.id ? updatedPosition : pos,
+          );
+          this.positionsSubject.next(updatedPositions);
+          alert(response.message);
+        }
+        else {
+          console.log(response.message);
+        }
+      });
   }
 
-  delete(position: Position): Observable<any> {
+  addPosition(newPosition: any) {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: this.authToken ? 'Bearer ' + this.authToken : '',
     });
-    return this.http.delete(`${this.apiUrl}/${position.id}`, { headers });
+
+    this.http
+      .post<ApiResultGen<Position>>(this.apiUrl, newPosition, { headers })
+      .subscribe((response) =>
+      {
+        if (response.succeeded) {
+          let addedPosition = response.result;
+          const updatedPositions = [
+            ...this.positionsSubject.value,
+            addedPosition,
+          ];
+          this.positionsSubject.next(updatedPositions);
+          alert(response.message);
+        } else {
+          alert("Something went wrong.");
+        }
+      });
   }
 
-  getToken(): string | null {
-    return this.authService.getToken();
+  deletePosition(id: number) {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: this.authToken ? 'Bearer ' + this.authToken : '',
+    });
+
+    this.http
+      .delete<ApiResult>(`${this.apiUrl}/${id}`, { headers })
+      .subscribe((response) =>
+      {
+        if (response.succeeded) {
+          const updatedPositions = this.positionsSubject.value.filter(
+            (p) => p.id !== id,
+          );
+          this.positionsSubject.next(updatedPositions);
+        }
+      });
   }
 }

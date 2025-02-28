@@ -1,29 +1,76 @@
+import { AfterViewInit, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { AppModalComponent } from '../../shared/modals/app-modal/app-modal.component';
+import { Department } from '../../entities.type';
+import { DepartmentService } from '../../services/department.service';
 
 @Component({
   selector: 'app-departments',
   templateUrl: './departments.component.html',
-  styleUrls: ['./departments.component.css'],
+  styleUrls: ['./departments.component.scss'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, AppModalComponent],
 })
-export class DepartmentsComponent implements OnInit {
-  departments = [
-    { name: 'Engineering', manager: 'John Doe', location: 'Building A' },
-    { name: 'HR', manager: 'Jane Smith', location: 'Building B' },
-    { name: 'Marketing', manager: 'Bob Johnson', location: 'Building C' },
-  ];
+export class DepartmentsComponent implements AfterViewInit {
+  private departmentService: DepartmentService = inject(DepartmentService);
+  departments: Department[] = [];
+  selectedDepartment?: Department;
 
-  constructor() {}
+  isCreateOpen: boolean = false;
+  isUpdateOpen: boolean = false;
+  isDeleteOpen: boolean = false;
 
-  ngOnInit(): void {}
+  modalFields = [{ name: 'name', label: 'Department name', type: 'text' }];
 
-  editDepartment(department: any) {
-    console.log('Edit Department', department);
+  ngAfterViewInit() {
+    this.loadDepartments();
   }
 
-  deleteDepartment(department: any) {
-    console.log('Delete Department', department);
+  loadDepartments() {
+    this.departmentService.loadDepartments();
+    this.departmentService.deparments$.subscribe((departments) => {
+      this.departments = departments;
+    });
+  }
+
+  openCreateModal() {
+    this.selectedDepartment = undefined;
+    this.isCreateOpen = true;
+  }
+
+  openUpdateModal(department: Department) {
+    this.selectedDepartment = department;
+    this.isUpdateOpen = true;
+  }
+
+  openDeleteModal(department: Department) {
+    this.selectedDepartment = department;
+    this.isDeleteOpen = true;
+  }
+
+  closeModal() {
+    this.selectedDepartment = undefined;
+    this.isCreateOpen = false;
+    this.isDeleteOpen = false;
+    this.isUpdateOpen = false;
+  }
+
+  onCreate(departmentData: Department) {
+    this.departmentService.addDepartment(departmentData);
+    this.isCreateOpen = false;
+  }
+
+  onUpdate(departmentData: Department) {
+    if (this.selectedDepartment) {
+      this.departmentService.edit(departmentData);
+    }
+    this.isUpdateOpen = false;
+  }
+
+  onDelete(id?: number) {
+    if (id) {
+      this.departmentService.deleteDepartment(id);
+      this.isDeleteOpen = false;
+    }
   }
 }

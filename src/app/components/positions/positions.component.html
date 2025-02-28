@@ -1,19 +1,56 @@
-<div class="table-container">
-  <h2>Positions</h2>
-  <table class="table">
+<div class="container mt-4">
+  <div class="table-header d-flex">
+    <h2 class="flex-grow-1">Positions</h2>
+    <button class="btn btn-success mb-3" (click)="openCreateModal()">+ Add Position</button>
+  </div>
+  <table class="table table-bordered table-striped">
     <thead>
-      <th *ngFor="let column of positionColumns">{{ column | uppercase }}</th>
-      <th>/</th>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Actions</th>
+      </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let position of positions; let i = index">
+      <tr *ngFor="let position of positions">
         <td>{{ position.id }}</td>
         <td>{{ position.name }}</td>
         <td>
-          <button (click)="editPosition(position)">Edit</button>
-          <button (click)="deletePosition(position)">Delete</button>
+          <button class="btn btn-primary btn-sm me-2" (click)="openUpdateModal(position)">Edit</button>
+          <button class="btn btn-danger btn-sm" (click)="openDeleteModal(position)">Delete</button>
         </td>
       </tr>
     </tbody>
   </table>
 </div>
+
+<!-- Add Position Modal -->
+<app-modal 
+  [isOpen] = "isCreateOpen"
+  modalTitle="Add new position"
+  [fields] = "modalFields"
+  [selectedItem]="selectedPosition"
+  (save)="onCreate($event)"
+  (close)="closeModal()">
+</app-modal>
+
+<!-- Update Position Modal -->
+<app-modal 
+  [isOpen] = "isUpdateOpen"
+  modalTitle="Update position"
+  [fields] = "modalFields"
+  [selectedItem]="selectedPosition"
+  (save)="onUpdate($event)"
+  (close)="closeModal()">
+</app-modal>
+
+<!-- Delete Confirmation Modal -->
+<app-modal 
+  [isOpen] = "isDeleteOpen"
+  modalTitle="Are you sure you want to delete this position?"
+  [selectedItem]="selectedPosition"
+  (save)="onDelete(selectedPosition?.id)"
+  (close)="closeModal()"
+  submitBtnText="Confirm"
+  [isConfirm]="true">
+</app-modal>

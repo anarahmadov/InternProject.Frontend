@@ -13,31 +13,18 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './app/interceptors/auth.interceptor';
 import { PositionService } from './app/services/position.service';
 import { AuthService } from './app/services/auth.service';
+import { HomeComponent } from './app/components/home/home.component';
+import { DepartmentService } from './app/services/department.service';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  {
-    path: 'employees',
-    component: EmployeesComponent,
-    canActivate: [authGuard],
-  },
-  { path: 'register', component: RegisterComponent, canActivate: [authGuard] },
-  {
-    path: 'forgotpassword',
-    component: ForgotPasswordComponent,
-    canActivate: [authGuard],
-  },
-  {
-    path: 'departments',
-    component: DepartmentsComponent,
-    canActivate: [authGuard],
-  },
-  {
-    path: 'positions',
-    component: PositionsComponent,
-    canActivate: [authGuard],
-  },
+  { path: 'home', component: HomeComponent },
+  { path: 'employees', component: EmployeesComponent, },
+  { path: 'register', component: RegisterComponent },
+  { path: 'forgotpassword', component: ForgotPasswordComponent },
+  { path: 'departments', component: DepartmentsComponent },
+  { path: 'positions', component: PositionsComponent },
 ];
 
 bootstrapApplication(AppComponent, {
@@ -46,6 +33,7 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes),
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     AuthService,
-    PositionService
-  ],
+    PositionService,
+    DepartmentService
+  ]
 });
