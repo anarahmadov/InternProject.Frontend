@@ -15,14 +15,12 @@
                         <input name="id" id="id" [value]="selectedItem?.id" type="text" hidden>
                         <div class="form-group" *ngFor="let field of fields">
                             <label class="form-label" [for]="field.name">{{ field.label }}</label>
-                            <input 
-                                [formControlName] = "field.name"
-                                class= "form-control" 
-                                [type]="field.type" 
-                                [name]="field.name" 
-                                [placeholder]="field.label" 
-                                [value]="selectedItem?.name"
-                                 />
+                            <input [formControlName] = "field.name"
+                                   class= "form-control" 
+                                   [type]="field.type" 
+                                   [name]="field.name" 
+                                   [placeholder]="field.label" 
+                                   [value]="selectedItem?.name"/>
                             <div *ngIf="
                                     modalForm.get('name')?.errors?.['required'] &&
                                     modalForm.get('name')?.touched">

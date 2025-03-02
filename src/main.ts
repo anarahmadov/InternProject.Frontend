@@ -8,13 +8,13 @@ import { PositionsComponent } from './app/components/positions/positions.compone
 import { ForgotPasswordComponent } from './app/components/forgotpassword/forgotpassword.component';
 import { EmployeesComponent } from './app/employee-management/employees/employees.component';
 import { provideHttpClient } from '@angular/common/http';
-import { authGuard } from './app/auth/auth.guard';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './app/interceptors/auth.interceptor';
 import { PositionService } from './app/services/position.service';
 import { AuthService } from './app/services/auth.service';
 import { HomeComponent } from './app/components/home/home.component';
 import { DepartmentService } from './app/services/department.service';
+import { EmployeeService } from './app/services/employee.service';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -34,6 +34,7 @@ bootstrapApplication(AppComponent, {
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     AuthService,
     PositionService,
-    DepartmentService
+    DepartmentService,
+    EmployeeService
   ]
 });

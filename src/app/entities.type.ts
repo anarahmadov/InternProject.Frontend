@@ -8,18 +8,41 @@ export interface Department {
   name: String;
 }
 
-export interface Employee {
+export interface Subordinate {
+  id: number;
+  name: string;
+  surname: string;
+  managerId: string;
+  managerName: string;
+  positionId: number;
+  positionName: string;
+  dateOfBirth: Date;
+}
+
+export interface Manager {
   id: number;
   name: string;
   surname: string;
   dateOfBirth: Date;
-  email: string;
 }
 
-export interface User{
+export interface Employee {
+  id: number;
+  name: string;
+  surname: string;
+  positionId: number;
+  positionName: string;
+  dateOfBirth: Date;
+}
+
+export interface User {
   id: number, 
   name: string,
   surname: string,
   email: string,
   accessToken: string
+}
+
+export interface Permision {
+
 }

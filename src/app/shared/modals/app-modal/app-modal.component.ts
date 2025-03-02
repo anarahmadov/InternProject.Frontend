@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, input, Input, OnChanges, OnInit, output, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, input, Input, OnChanges, OnInit, output, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EmployeesComponent } from '../../../employee-management/employees/employees.component';
 
@@ -10,7 +10,7 @@ import { EmployeesComponent } from '../../../employee-management/employees/emplo
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
 })
-export class AppModalComponent implements OnChanges, OnInit {
+export class AppModalComponent implements OnChanges {
   @Input() modalTitle: string = '';
   @Input() fields: { name: string; label: string; type?: string }[] = [];
   @Input() isEditMode: boolean = false;
@@ -20,38 +20,14 @@ export class AppModalComponent implements OnChanges, OnInit {
   @Input() isConfirm: boolean = false;
   @Output() close = new EventEmitter();
   @Output() save = new EventEmitter();
+  @Output() confirm? = this.isConfirm ? new EventEmitter() : null;
 
   modalForm!: FormGroup;
 
-  ngOnInit(): void {
-    this.buildForm();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    for (let propName in changes) {
-      let change = changes[propName];
-      let curVal = JSON.stringify(change.currentValue);
-      let prevVal = JSON.stringify(change.previousValue);
-      console.log(
-        `${propName}: currentValue = ${curVal}, previousValue = ${prevVal}`,
-      );
-    }
-    this.buildForm();
-  }
-
-  buildForm() {
+  ngOnChanges(): void {
     this.modalForm = new FormGroup({
-      name: new FormControl(
-        this.selectedItem?.name || '',
-        Validators.required
-      ),
+      name: new FormControl(this.selectedItem?.name || '', Validators.required),
     });
-    this.addValidations();
-  }
-
-  addValidations() {
-    this.modalForm
-      .get('name')?.setValidators([Validators.required, Validators.minLength(3)]);
   }
 
   closeModal() {
@@ -63,14 +39,15 @@ export class AppModalComponent implements OnChanges, OnInit {
   saveChanges(isConfirm: boolean) {
     if (!isConfirm) {
       if (this.modalForm.valid) {
-        const updatedPosition = {
-          ...this.selectedItem,
-          name: this.modalForm.value.name,
-        };
+        const updatedPosition = { ...this.selectedItem, name: this.modalForm.value.name}; 
         this.save.emit(updatedPosition);
         this.isOpen = false;
+      } else {
+        alert("Please, enter required field correctly.");
       }
-    } else {
+    }
+    else {
+      console.log();
       this.save.emit(this.selectedItem?.id);
       this.isOpen = false;
     }

@@ -1,8 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
 import { Position } from '../entities.type';
-import { AuthService } from './auth.service';
 import { BehaviorSubject } from 'rxjs';
 import { ApiResult, ApiResultGen } from '../models/apiresult.model';
 
@@ -10,7 +8,6 @@ import { ApiResult, ApiResultGen } from '../models/apiresult.model';
 export class PositionService {
   private apiUrl: string = 'https://localhost:7247/api/positions';
   private authToken: string | null = localStorage.getItem('authToken');
-  private authService: AuthService = inject(AuthService);
   private http: HttpClient = inject(HttpClient);
   private positionsSubject = new BehaviorSubject<any[]>([]);
   positions$ = this.positionsSubject.asObservable();

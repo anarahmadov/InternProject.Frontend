@@ -1,5 +1,4 @@
-import { AfterViewInit, Component, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, inject, OnInit } from '@angular/core';
 import { PositionService } from '../../services/position.service';
 import { Position } from '../../entities.type';
 import { CommonModule } from '@angular/common';
@@ -12,7 +11,7 @@ import { AppModalComponent } from '../../shared/modals/app-modal/app-modal.compo
   standalone: true,
   imports: [CommonModule, AppModalComponent],
 })
-export class PositionsComponent implements AfterViewInit {
+export class PositionsComponent implements OnInit {
   private positionService: PositionService = inject(PositionService);
   positions: Position[] = [];
   selectedPosition?: Position;
@@ -23,7 +22,7 @@ export class PositionsComponent implements AfterViewInit {
 
   modalFields = [{ name: 'name', label: 'Position name', type: 'text' }];
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.loadPositions();
   }
 

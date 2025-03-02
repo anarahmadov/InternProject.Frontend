@@ -16,8 +16,7 @@ import { PositionService } from '../../services/position.service';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, RouterModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
-  providers: [AuthService, PositionService],
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
@@ -39,6 +38,7 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     if (this.loginForm.valid) {
       this.service.login(this.loginForm.getRawValue()).subscribe();
+      this.router.navigate(['/home']);
     } else {
       this.errorMessage = 'Invalid credentials.';
     }
