@@ -9,9 +9,24 @@ import { ApiResultGen } from '../models/apiresult.model';
 export class AuthService {
   private apiUrl = 'https://localhost:7247/api/Identity';
   private http: HttpClient = inject(HttpClient);
-  private permissionsSubject = new BehaviorSubject<string[]>([]);
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
-  authState$ = this.isAuthenticatedSubject.asObservable();
+
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(
+    this.loadAuthState(),
+  );
+  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  private permissionsSubject = new BehaviorSubject<string[]>(
+    this.loadPermissions(),
+  );
+  permissions$ = this.permissionsSubject.asObservable();
+
+  private loadAuthState(): boolean {
+    const storedToken = localStorage.getItem('authToken');
+    return storedToken ? true : false;
+  }
+  private loadPermissions(): string[] {
+    const storedPermissions = localStorage.getItem('permissions');
+    return storedPermissions ? JSON.parse(storedPermissions) : [];
+  }
 
   login(request: LoginRequest): Observable<ApiResultGen<LoginResponse>> {
     return this.http
@@ -19,16 +34,14 @@ export class AuthService {
       .pipe(
         tap((response: ApiResultGen<LoginResponse>) => {
           if (response && response.succeeded) {
-            localStorage.setItem('authToken', response.result.accessToken);
-            this.permissionsSubject.next(response.result.permissions);
-            this.isAuthenticatedSubject.next(true);
+            this.setAuthToken(response.result.accessToken);
+            this.setPermissions(response.result.permissions);
           } else {
             alert(response.message);
           }
         }),
       );
   }
-
   register(
     request: RegisterRequest,
   ): Observable<ApiResultGen<RegisterResponse>> {
@@ -41,7 +54,6 @@ export class AuthService {
         }),
       );
   }
-
   logout(): void {
     localStorage.removeItem('authToken');
     localStorage.removeItem('permissions');
@@ -49,27 +61,20 @@ export class AuthService {
     this.isAuthenticatedSubject.next(false);
   }
 
-  loadPermissionsFromLocalStorage(): void {
-    const storedPermissions = localStorage.getItem('permissions');
-    if (storedPermissions) {
-      this.permissionsSubject.next(JSON.parse(storedPermissions));
-      this.isAuthenticatedSubject.next(true);
-    }
+  setAuthToken(token: string) {
+    localStorage.setItem('authToken', token);
+    this.isAuthenticatedSubject.next(true);
   }
-
-  getPermissions(): Observable<string[]> {
-    return this.permissionsSubject.asObservable();
+  setPermissions(permissions: string[]) {
+    localStorage.setItem('permissions', JSON.stringify(permissions));
+    this.permissionsSubject.next(permissions);
   }
-
   hasPermission(permission: string): boolean {
     return this.permissionsSubject.value.includes(permission);
   }
-
-  getToken(): string | null {
-    return localStorage.getItem('authToken');
-  }
-
-  showValueOfAuth() {
-    return this.isAuthenticatedSubject.value;
+  includesPermission(permission: string) {
+    return this.permissionsSubject.value.some((p) =>
+      p.toLowerCase().includes(permission.toLowerCase()),
+    );
   }
 }

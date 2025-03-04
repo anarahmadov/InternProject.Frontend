@@ -10,6 +10,7 @@ import { AppModalComponent } from '../../shared/modals/app-modal/app-modal.compo
   styleUrls: ['./positions.component.scss'],
   standalone: true,
   imports: [CommonModule, AppModalComponent],
+  providers:[PositionService]
 })
 export class PositionsComponent implements OnInit {
   private positionService: PositionService = inject(PositionService);

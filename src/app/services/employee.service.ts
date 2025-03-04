@@ -47,7 +47,7 @@ export class EmployeeService {
     this.http
       .get<
         ApiResultGen<Subordinate[]>
-      >(`${this.apiUrl}/${managerId}/subordinates`, { headers })
+      >(`${this.apiUrl}/${managerId}/subordinates/all`, { headers })
       .subscribe((response) => {
         if (response.succeeded) this.employeesSubject.next(response.result);
       });

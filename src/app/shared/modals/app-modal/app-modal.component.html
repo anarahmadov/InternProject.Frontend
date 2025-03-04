@@ -36,7 +36,7 @@
                 </div>
     
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" (click)="saveChanges(this.isConfirm)">Save</button>
+                    <button type="button" class="btn btn-primary" *ngIf="this.isResponsible" (click)="saveChanges(this.isConfirm)">{{isConfirm ? "Confirm" : "Save"}}</button>
                     <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
                 </div>
             </div>

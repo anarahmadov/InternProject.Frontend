@@ -23,7 +23,12 @@ export interface Manager {
   id: number;
   name: string;
   surname: string;
-  dateOfBirth: Date;
+  managerId: number;
+  managerName: string;
+  positionId: number;
+  positionName: string;
+  level: number;
+  birthDate: Date;
 }
 
 export interface Employee {
@@ -41,8 +46,4 @@ export interface User {
   surname: string,
   email: string,
   accessToken: string
-}
-
-export interface Permision {
-
 }

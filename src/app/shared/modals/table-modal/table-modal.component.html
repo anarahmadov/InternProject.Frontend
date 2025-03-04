@@ -1,0 +1,48 @@
+<!-- Reusable Modal -->
+<div class="modal-overlay" *ngIf="isOpen">
+    <div class="modal fade show modal-lg" [ngClass]="{ 'show': isOpen }" style="display: block;">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ modalTitle }}</h5>
+                    <button (click)="closeModal()" type="button" class="btn-close"></button>
+                </div>
+                <div class="modal-body">
+                    <table *ngIf="subordinates.length > 0" class="table table-bordered table-striped">
+                        <thead>
+                            <th *ngFor="let column of subordinateColumns">{{column}}</th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let subordinate of subordinates">
+                                <td>{{ subordinate.id }}</td>
+                                <td>{{ subordinate.name }}</td>
+                                <td>{{ subordinate.surname }}</td>
+                                <td>{{ subordinate.managerName }}</td>
+                                <td>{{ subordinate.positionName }}</td>
+                                <td>{{ subordinate.dateOfBirth | date:'mediumDate'}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table *ngIf="managers.length > 0" class="table table-bordered table-striped">
+                        <thead>
+                            <th *ngFor="let column of managerColumns">{{column}}</th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let manager of managers">
+                                <td>{{ manager.id }}</td>
+                                <td>{{ manager.name }}</td>
+                                <td>{{ manager.surname }}</td>
+                                <td>{{ manager.positionName }}</td>
+                                <td>{{ manager.level }}</td>
+                                <td>{{ manager.birthDate | date:'mediumDate' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

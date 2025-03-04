@@ -10,6 +10,7 @@ import { DepartmentService } from '../../services/department.service';
   styleUrls: ['./departments.component.scss'],
   standalone: true,
   imports: [CommonModule, AppModalComponent],
+  providers:[DepartmentService]
 })
 export class DepartmentsComponent implements AfterViewInit {
   private departmentService: DepartmentService = inject(DepartmentService);

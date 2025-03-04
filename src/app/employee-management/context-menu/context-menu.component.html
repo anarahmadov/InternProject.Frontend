@@ -1,0 +1,24 @@
+<!-- Reusable Modal -->
+<div class="modal-overlay" *ngIf="isOpen">
+    <div class="modal fade show modal-sm" style="display: block;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Options</h5>
+                    <button (click)="closeModal()" type="button" class="btn-close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="context-menu">
+                        <button class="btn btn-secondary" (click)="onAction('Edit')">Edit</button>
+                        <button class="btn btn-danger" (click)="onAction('Delete')">Delete</button>
+                        <button class="btn btn-primary" (click)="onAction('getAllEmployees')">See employees</button>
+                        <button class="btn btn-primary" (click)="onAction('getAllManagers')">See managers</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

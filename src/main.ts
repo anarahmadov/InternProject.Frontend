@@ -7,14 +7,10 @@ import { DepartmentsComponent } from './app/components/departments/departments.c
 import { PositionsComponent } from './app/components/positions/positions.component';
 import { ForgotPasswordComponent } from './app/components/forgotpassword/forgotpassword.component';
 import { EmployeesComponent } from './app/employee-management/employees/employees.component';
-import { provideHttpClient } from '@angular/common/http';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptor } from './app/interceptors/auth.interceptor';
-import { PositionService } from './app/services/position.service';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './app/interceptors/auth.interceptor';
 import { AuthService } from './app/services/auth.service';
 import { HomeComponent } from './app/components/home/home.component';
-import { DepartmentService } from './app/services/department.service';
-import { EmployeeService } from './app/services/employee.service';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -29,12 +25,8 @@ export const routes: Routes = [
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([authInterceptor])),
     provideRouter(routes),
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     AuthService,
-    PositionService,
-    DepartmentService,
-    EmployeeService
-  ]
+  ],
 });

@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, input, Input, OnChanges, OnInit, output, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { EmployeesComponent } from '../../../employee-management/employees/employees.component';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-modal',
@@ -16,40 +15,44 @@ export class AppModalComponent implements OnChanges {
   @Input() isEditMode: boolean = false;
   @Input() selectedItem?: any;
   @Input() isOpen: boolean = true;
-  @Input() submitBtnText: string = 'Save';
   @Input() isConfirm: boolean = false;
+  @Input() isResponsible: boolean = false;
   @Output() close = new EventEmitter();
   @Output() save = new EventEmitter();
-  @Output() confirm? = this.isConfirm ? new EventEmitter() : null;
 
   modalForm!: FormGroup;
 
   ngOnChanges(): void {
-    this.modalForm = new FormGroup({
-      name: new FormControl(this.selectedItem?.name || '', Validators.required),
-    });
+    this.buildForm();
   }
-
-  closeModal() {
-    this.close.emit();
-    this.isOpen = false;
-    this.selectedItem = {};
+  buildForm() {
+    this.modalForm = new FormGroup({
+      name: new FormControl(this.selectedItem?.name || ''),
+    });
+    this.addValidations();
+  }
+  addValidations() {
+    this.modalForm
+      .get('name')
+      ?.setValidators([Validators.required, Validators.minLength(3)]);
   }
 
   saveChanges(isConfirm: boolean) {
     if (!isConfirm) {
       if (this.modalForm.valid) {
-        const updatedPosition = { ...this.selectedItem, name: this.modalForm.value.name}; 
+        const updatedPosition = {
+          ...this.selectedItem,
+          name: this.modalForm.value.name,
+        };
         this.save.emit(updatedPosition);
         this.isOpen = false;
-      } else {
-        alert("Please, enter required field correctly.");
       }
-    }
-    else {
-      console.log();
+    } else {
       this.save.emit(this.selectedItem?.id);
       this.isOpen = false;
     }
+  }
+  closeModal() {
+    this.close.emit();
   }
 }

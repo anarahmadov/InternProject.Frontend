@@ -37,8 +37,9 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      this.service.login(this.loginForm.getRawValue()).subscribe();
-      this.router.navigate(['/home']);
+      this.service.login(this.loginForm.getRawValue()).subscribe((response) => {
+        if(response.succeeded) this.router.navigate(['/home']);
+      });
     } else {
       this.errorMessage = 'Invalid credentials.';
     }

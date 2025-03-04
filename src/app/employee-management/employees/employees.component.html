@@ -7,6 +7,8 @@
       <tr>
         <th>#</th>
         <th>Name</th>
+        <th>Surname</th>
+        <th>Birthday</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -14,22 +16,57 @@
       <tr *ngFor="let employee of employees">
         <td>{{ employee.id }}</td>
         <td>{{ employee.name }}</td>
+        <td>{{ employee.surname }}</td>
+        <td>{{ employee.dateOfBirth }}</td>
         <td>
-          <button class="btn btn-primary btn-sm me-2" (click)="openUpdateModal(employee)">Edit</button>
-          <button class="btn btn-danger btn-sm me-2" (click)="openDeleteModal(employee)">Delete</button>
-          <button class="btn btn-secondary btn-sm me-2">Show</button>
+          <button class="btn btn-secondary btn-sm me-2" (click)="openContextMenu(employee)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots"
+              viewBox="0 0 16 16">
+              <path
+                d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3">
+              </path>
+            </svg>
+          </button>
         </td>
       </tr>
     </tbody>
   </table>
 </div>
 
+<app-context-menu
+[isOpen]="isContextMenuOpen"
+[selectedItem]="selectedEmployee"
+(openDelete)="openDeleteModal()"
+(openUpdate)="openUpdateModal($event)"
+(openEmployees)="openEmployeesTableModal($event)"
+(openManagers)="openManagersTableModal($event)"
+(close)="closeModal()"
+></app-context-menu>
+
+<!-- Employees modal -->
+<app-table-modal #subordinatesTableModal
+  [modalTitle]="modalTitle" 
+  [selectedItemId]="selectedEmployee?.id"
+  query = "Employees"
+  (close)="closeModal()">
+</app-table-modal>
+
+<!-- Managers modal -->
+<app-table-modal #managersTableModal
+  [isOpen]="isManagersTableModalOpen" 
+  [modalTitle]="modalTitle" 
+  [selectedItemId]="selectedEmployee?.id"
+  query="Managers" 
+  (close)="closeModal()">
+</app-table-modal>
+
 <!-- Add Employee Modal -->
 <app-modal 
   [isOpen]="isCreateOpen" 
-  modalTitle="Add new employee" 
+  [modalTitle]="modalTitle" 
   [fields]="modalFields"
   [selectedItem]="selectedEmployee" 
+  [isResponsible]="true" 
   (save)="onCreate($event)" 
   (close)="closeModal()">
 </app-modal>
@@ -37,28 +74,21 @@
 <!-- Update Employee Modal -->
 <app-modal 
   [isOpen]="isUpdateOpen" 
-  modalTitle="Update position" 
+  [modalTitle]="modalTitle" 
   [fields]="modalFields" 
   [selectedItem]="selectedEmployee"
+  [isResponsible]="true" 
   (save)="onUpdate($event)" 
   (close)="closeModal()">
 </app-modal>
 
 <!-- Delete Confirmation Modal -->
 <app-modal 
-  [isOpen]="isDeleteOpen" 
-  modalTitle="Are you sure you want to delete this employee?"
+  [isOpen]="isDeleteOpen"
+  [modalTitle]="modalTitle" 
   [selectedItem]="selectedEmployee" 
+  [isResponsible]="true" 
   (save)="onDelete(selectedEmployee?.id)" 
   (close)="closeModal()"
-  submitBtnText="Confirm" 
   [isConfirm]="true">
-</app-modal>
-
-<app-modal
-  [isOpen]="isModalOpen"
-  modalTitle="Hierarchical"
-  [selectedItem]="selectedEmployee"
-  (close)="closeModal()"
-  submitBtnText="Close">
 </app-modal>

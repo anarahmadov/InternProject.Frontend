@@ -7,15 +7,13 @@ import { ApiResult, ApiResultGen } from '../models/apiresult.model';
 @Injectable()
 export class PositionService {
   private apiUrl: string = 'https://localhost:7247/api/positions';
-  private authToken: string | null = localStorage.getItem('authToken');
   private http: HttpClient = inject(HttpClient);
   private positionsSubject = new BehaviorSubject<any[]>([]);
   positions$ = this.positionsSubject.asObservable();
 
   loadPositions() {
     let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: this.authToken ? 'Bearer ' + this.authToken : '',
+      'Content-Type': 'application/json'
     });
 
     this.http
@@ -28,7 +26,6 @@ export class PositionService {
   edit(position: Position) {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      Authorization: this.authToken ? 'Bearer ' + this.authToken : '',
     });
 
     this.http
@@ -51,8 +48,7 @@ export class PositionService {
 
   addPosition(newPosition: any) {
     let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: this.authToken ? 'Bearer ' + this.authToken : '',
+      'Content-Type': 'application/json'
     });
 
     this.http
@@ -75,8 +71,7 @@ export class PositionService {
 
   deletePosition(id: number) {
     let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: this.authToken ? 'Bearer ' + this.authToken : '',
+      'Content-Type': 'application/json'
     });
 
     this.http
