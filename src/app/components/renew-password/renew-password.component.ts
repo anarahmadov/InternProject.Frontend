@@ -7,8 +7,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router'
 import { AuthService } from '../../services/auth.service';
+import { PasswordResetService } from '../../services/password-reset.service';
 
 @Component({
   selector: 'app-renew-password',
@@ -26,8 +27,8 @@ export class RenewPasswordComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private route: ActivatedRoute,
     private router: Router,
+    private passwordResetService: PasswordResetService
   ) {}
   ngOnInit(): void {
     this.renewPasswordForm = this.fb.group(
@@ -45,9 +46,7 @@ export class RenewPasswordComponent implements OnInit {
       },
       { validator: this.passwordMatchValidator },
     );
-    this.route.queryParams.subscribe((params) => {
-      this.email = params['email'];
-    });
+    this.email = this.passwordResetService.getEmail();
   }
 
   get passwordsMismatch() {

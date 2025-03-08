@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, inject } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppModalComponent } from '../../shared/modals/app-modal/app-modal.component';
 import { Department } from '../../entities.type';
 import { DepartmentService } from '../../services/department.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-departments',
@@ -10,9 +11,9 @@ import { DepartmentService } from '../../services/department.service';
   styleUrls: ['./departments.component.scss'],
   standalone: true,
   imports: [CommonModule, AppModalComponent],
-  providers:[DepartmentService]
+  providers: [DepartmentService],
 })
-export class DepartmentsComponent implements AfterViewInit {
+export class DepartmentsComponent implements AfterViewInit, OnInit {
   private departmentService: DepartmentService = inject(DepartmentService);
   departments: Department[] = [];
   selectedDepartment?: Department;
@@ -20,8 +21,19 @@ export class DepartmentsComponent implements AfterViewInit {
   isCreateOpen: boolean = false;
   isUpdateOpen: boolean = false;
   isDeleteOpen: boolean = false;
-
   modalFields = [{ name: 'name', label: 'Department name', type: 'text' }];
+
+  showEditButton!: boolean;
+  showDeleteButton!: boolean;
+
+  constructor(private authService: AuthService) { }
+
+  ngOnInit(): void {
+    this.authService.permissions$.subscribe((permissions) => {
+      this.showDeleteButton = permissions.some(x => x == "DepartmentDelete");
+      this.showEditButton = permissions.some(x=> x ==  "DepartmentUpdate");
+    });
+  }
 
   ngAfterViewInit() {
     this.loadDepartments();

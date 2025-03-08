@@ -27,9 +27,9 @@ export class AppComponent implements OnInit {
       this.isLoggedIn = authState;
     });
     this.authService.permissions$.subscribe(permissions => {
-      this.showEmployeesLink = permissions.some(x => x.includes("Employee"));
-      this.showDepartmentsLink = permissions.some(x => x.includes("Department"));
-      this.showPositionsLink = permissions.some(x => x.includes("Position"));
+      this.showEmployeesLink = permissions.some(x => x.includes("EmployeeRead"));
+      this.showDepartmentsLink = permissions.some(x => x.includes("DepartmentRead"));
+      this.showPositionsLink = permissions.some(x => x.includes("PositionRead"));
     });
   }
 

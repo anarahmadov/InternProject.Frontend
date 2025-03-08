@@ -1,7 +1,7 @@
 <div class="container mt-4">
   <div class="table-header d-flex">
     <h2 class="flex-grow-1">Positions</h2>
-    <button class="btn btn-success mb-3" (click)="openCreateModal()">+ Add Position</button>
+    <button *ngIf="showCreateButton" class="btn btn-success mb-3" (click)="openCreateModal()">+ Add Position</button>
   </div>
   <table class="table table-bordered table-striped">
     <thead>
@@ -16,8 +16,8 @@
         <td>{{ position.id }}</td>
         <td>{{ position.name }}</td>
         <td>
-          <button class="btn btn-primary btn-sm me-2" (click)="openUpdateModal(position)">Edit</button>
-          <button class="btn btn-danger btn-sm" (click)="openDeleteModal(position)">Delete</button>
+          <button *ngIf="showEditButton" class="btn btn-primary btn-sm me-2" (click)="openUpdateModal(position)">Edit</button>
+          <button *ngIf="showDeleteButton" class="btn btn-danger btn-sm" (click)="openDeleteModal(position)">Delete</button>
         </td>
       </tr>
     </tbody>

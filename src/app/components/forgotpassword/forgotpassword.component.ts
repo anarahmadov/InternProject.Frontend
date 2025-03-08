@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { PasswordResetService } from '../../services/password-reset.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -22,13 +23,14 @@ export class ForgotPasswordComponent implements OnInit {
   submittedForgotPasswordForm = false;
   submittedSecurityCodeForm = false;
   formStatus: boolean = true;
-  code: string = "";
-  email: string = "";
+  code: string = '';
+  email: string = '';
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
+    private passwordResetService: PasswordResetService,
   ) {}
   ngOnInit() {
     this.forgotPasswordForm = this.fb.group({
@@ -53,18 +55,20 @@ export class ForgotPasswordComponent implements OnInit {
           securityCode: ['', [Validators.required]],
         });
       }
-    }
-    else {
+    } else {
       if (this.securityCodeForm.valid) {
         this.submittedSecurityCodeForm = true;
         if (this.securityCodeForm.get('securityCode')?.value == this.code) {
-          this.router.navigate(['/renewpassword'], {
-            queryParams: { email : this.email },
-          });
+          this.setEmail(this.email);
+          this.router.navigate(['/renewpassword']);
         } else {
-          alert("Wrong password!");
+          alert('Wrong password!');
         }
       }
     }
+  }
+
+  setEmail(email: string) {
+    this.passwordResetService.setEmail(email);
   }
 }

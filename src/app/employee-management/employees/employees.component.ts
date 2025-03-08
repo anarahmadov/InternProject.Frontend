@@ -5,6 +5,7 @@ import { AppModalComponent } from '../../shared/modals/app-modal/app-modal.compo
 import { EmployeeService } from '../../services/employee.service';
 import { ContextMenuComponent } from '../context-menu/context-menu.component';
 import { TableModalComponent } from "../../shared/modals/table-modal/table-modal.component";
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-employees',
@@ -37,8 +38,23 @@ export class EmployeesComponent implements AfterViewInit {
   modalTitle: string = '';
   modalFields = [{ name: 'name', label: 'Employee name', type: 'text' }];
 
-  @ViewChild('subordinatesTableModal') subordinatesTableModal!: TableModalComponent;
+  showCreateButton!: boolean;
+  showDeleteButton!: boolean;
+  showEditButton!: boolean;
+
+  @ViewChild('subordinatesTableModal')
+  subordinatesTableModal!: TableModalComponent;
   @ViewChild('managersTableModal') managersTableModal!: TableModalComponent;
+
+  constructor(private authService: AuthService) { }
+
+  ngOnInit(): void {
+    this.authService.permissions$.subscribe((permissions) => {
+      this.showCreateButton = permissions.some((x) => x == 'DepartmentCreate');
+      this.showDeleteButton = permissions.some((x) => x == 'DepartmentDelete');
+      this.showEditButton = permissions.some((x) => x == 'DepartmentUpdate');
+    });
+  }
 
   ngAfterViewInit() {
     this.loadEmployees();
@@ -70,13 +86,13 @@ export class EmployeesComponent implements AfterViewInit {
   openManagersTableModal(selectedData: Employee) {
     this.selectedEmployee = selectedData;
     this.modalTitle = 'Managers';
-    this.managersTableModal.open(this.modalTitle); 
+    this.managersTableModal.open(this.modalTitle);
     this.isManagersTableModalOpen = true;
   }
   openEmployeesTableModal(selectedData: Employee) {
     this.selectedEmployee = selectedData;
     this.modalTitle = 'Employees';
-    this.subordinatesTableModal.open(this.modalTitle); 
+    this.subordinatesTableModal.open(this.modalTitle);
     this.isEmployeesTableModalOpen = true;
   }
   openContextMenu(employee: Employee | undefined) {
