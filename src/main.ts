@@ -11,14 +11,16 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './app/interceptors/auth.interceptor';
 import { AuthService } from './app/services/auth.service';
 import { HomeComponent } from './app/components/home/home.component';
+import { RenewPasswordComponent } from './app/components/renew-password/renew-password.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent },
-  { path: 'employees', component: EmployeesComponent, },
+  { path: 'employees', component: EmployeesComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'forgotpassword', component: ForgotPasswordComponent },
+  { path: 'renewpassword', component: RenewPasswordComponent },
   { path: 'departments', component: DepartmentsComponent },
   { path: 'positions', component: PositionsComponent },
 ];

@@ -43,7 +43,6 @@ export class EmployeesComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.loadEmployees();
   }
-
   loadEmployees() {
     this.employeeService.loadEmployees();
     this.employeeService.employees$.subscribe((employees) => {
@@ -82,7 +81,6 @@ export class EmployeesComponent implements AfterViewInit {
   }
   openContextMenu(employee: Employee | undefined) {
     this.selectedEmployee = employee;
-    console.log(this.selectedEmployee);
     this.isCreateOpen = false;
     this.isDeleteOpen = false;
     this.isUpdateOpen = false;

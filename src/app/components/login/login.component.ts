@@ -9,7 +9,6 @@ import {
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { PositionService } from '../../services/position.service';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +20,7 @@ import { PositionService } from '../../services/position.service';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   errorMessage: string = '';
+  forgotPasswordSecurityCode?: string;
 
   constructor(
     private fb: FormBuilder,
@@ -30,8 +30,10 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      email: ['', [Validators.required]],
+      password: [
+        '',[ Validators.required ],
+      ],
     });
   }
 
@@ -43,5 +45,17 @@ export class LoginComponent implements OnInit {
     } else {
       this.errorMessage = 'Invalid credentials.';
     }
+  }
+
+  navigateToForgotPassword(){
+    this.router.navigate(['/forgotpassword'], {
+      queryParams: { email: this.forgotPasswordSecurityCode },
+    });
+  }
+
+  forgotPassword() {
+    this.service.forgotPassword(this.loginForm.get('email')?.value).subscribe(value => {
+      
+    });
   }
 }

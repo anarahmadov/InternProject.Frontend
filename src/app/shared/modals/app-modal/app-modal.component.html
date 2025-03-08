@@ -4,12 +4,10 @@
      style="display: block;">
         <div class="modal-dialog">
             <div class="modal-content">
-    
                 <div class="modal-header">
                     <h5 class="modal-title">{{ modalTitle }}</h5>
                     <button (click)="closeModal()" type="button" class="btn-close"></button>
                 </div>
-    
                 <div class="modal-body">
                     <form [formGroup]="modalForm">
                         <input name="id" id="id" [value]="selectedItem?.id" type="text" hidden>
@@ -34,9 +32,8 @@
                         </div>
                     </form>
                 </div>
-    
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" *ngIf="this.isResponsible" (click)="saveChanges(this.isConfirm)">{{isConfirm ? "Confirm" : "Save"}}</button>
+                    <button type="button" [ngClass]="isConfirm ? 'btn btn-danger' : 'btn btn-primary'" (click)="saveChanges(this.isConfirm)">{{this.isConfirm ? "Delete" : "Save"}}</button>
                     <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
                 </div>
             </div>

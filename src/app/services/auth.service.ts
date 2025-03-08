@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { LoginRequest, RegisterRequest } from '../request.type';
+import { CheckOldPasswordRequest, ForgotPasswordRequest, LoginRequest, RegisterRequest, RenewPasswordRequest } from '../request.type';
 import { LoginResponse, RegisterResponse } from '../response.type';
-import { ApiResultGen } from '../models/apiresult.model';
+import { ApiResult, ApiResultGen } from '../models/apiresult.model';
 
 @Injectable()
 export class AuthService {
@@ -36,8 +36,9 @@ export class AuthService {
           if (response && response.succeeded) {
             this.setAuthToken(response.result.accessToken);
             this.setPermissions(response.result.permissions);
+            return response.result;
           } else {
-            alert(response.message);
+            return response.message;
           }
         }),
       );
@@ -53,6 +54,22 @@ export class AuthService {
           }
         }),
       );
+  }
+  forgotPassword(
+    request: ForgotPasswordRequest,
+  ): Observable<ApiResultGen<string>> {
+    return this.http
+      .post<ApiResultGen<string>>(`${this.apiUrl}/forgotpassword`, request)
+      .pipe(tap((response: ApiResultGen<string>) => {}));
+  }
+  renewPassword(request: RenewPasswordRequest): Observable<ApiResult> {
+    return this.http
+      .post<ApiResult>(`${this.apiUrl}/renewpassword`, request)
+      .pipe(tap((response: ApiResult) => {}));
+  }
+  checkOldPassword(request: CheckOldPasswordRequest): Observable<ApiResultGen<boolean>> {
+    console.log(request);
+    return this.http.post<ApiResultGen<boolean>>(`${this.apiUrl}/checkoldpassword`, {'email': request.email, 'password': request.password} );
   }
   logout(): void {
     localStorage.removeItem('authToken');

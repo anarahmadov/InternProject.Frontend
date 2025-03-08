@@ -1,38 +1,70 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
   templateUrl: './forgotpassword.component.html',
-  imports: [CommonModule, ReactiveFormsModule],
-  styleUrls: ['./forgotpassword.component.css']
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  styleUrls: ['./forgotpassword.component.css'],
 })
 export class ForgotPasswordComponent implements OnInit {
   forgotPasswordForm!: FormGroup;
+  securityCodeForm!: FormGroup;
+  submittedForgotPasswordForm = false;
+  submittedSecurityCodeForm = false;
+  formStatus: boolean = true;
+  code: string = "";
+  email: string = "";
 
-  constructor(private fb: FormBuilder) {}
-
-  ngOnInit(): void {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+  ngOnInit() {
     this.forgotPasswordForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required]],
     });
   }
 
-  get email() {
-    return this.forgotPasswordForm.get('email');
-  }
-
   onSubmit() {
-    if (this.forgotPasswordForm.valid) {
-      // Handle the form submission (e.g., call an API to reset the password)
-      console.log('Form submitted', this.forgotPasswordForm.value);
+    if (this.formStatus) {
+      if (this.forgotPasswordForm.valid) {
+        this.submittedForgotPasswordForm = true;
+        this.email = this.forgotPasswordForm.get('email')?.value;
+        this.authService
+          .forgotPassword(this.forgotPasswordForm.getRawValue())
+          .subscribe((response) => {
+            if (response && response.succeeded) {
+              this.code = response.result;
+            }
+          });
+        this.formStatus = false;
+        this.securityCodeForm = this.fb.group({
+          securityCode: ['', [Validators.required]],
+        });
+      }
+    }
+    else {
+      if (this.securityCodeForm.valid) {
+        this.submittedSecurityCodeForm = true;
+        if (this.securityCodeForm.get('securityCode')?.value == this.code) {
+          this.router.navigate(['/renewpassword'], {
+            queryParams: { email : this.email },
+          });
+        } else {
+          alert("Wrong password!");
+        }
+      }
     }
   }
 }
