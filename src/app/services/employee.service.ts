@@ -1,21 +1,20 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Subordinate, Manager, Employee } from '../entities.type';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, catchError, throwError } from 'rxjs';
 import { ApiResult, ApiResultGen } from '../models/apiresult.model';
+import { EmployeesComponent } from '../employee-management/employees/employees.component';
 
 @Injectable()
 export class EmployeeService {
   private apiUrl: string = 'https://localhost:7247/api/employees';
-  private authToken: string | null = localStorage.getItem('authToken');
   private http: HttpClient = inject(HttpClient);
   private employeesSubject = new BehaviorSubject<any[]>([]);
   employees$ = this.employeesSubject.asObservable();
 
   loadEmployees() {
     let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: this.authToken ? 'Bearer ' + this.authToken : '',
+      'Content-Type': 'application/json'
     });
 
     this.http
@@ -27,8 +26,7 @@ export class EmployeeService {
 
   getManagers(employeeId: number) {
     let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: this.authToken ? 'Bearer ' + this.authToken : '',
+      'Content-Type': 'application/json'
     });
 
     this.http
@@ -40,8 +38,7 @@ export class EmployeeService {
 
   getAllEmployeesByManager(managerId: number) {
     let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: this.authToken ? 'Bearer ' + this.authToken : '',
+      'Content-Type': 'application/json'
     });
 
     this.http
@@ -55,8 +52,7 @@ export class EmployeeService {
 
   getEmployeesByManager(managerId: number) {
     let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: this.authToken ? 'Bearer ' + this.authToken : '',
+      'Content-Type': 'application/json'
     });
 
     this.http
@@ -70,8 +66,7 @@ export class EmployeeService {
 
   edit(employeee: Employee) {
     let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: this.authToken ? 'Bearer ' + this.authToken : '',
+      'Content-Type': 'application/json'
     });
 
     this.http
@@ -83,15 +78,13 @@ export class EmployeeService {
             pos.id === employeee.id ? updatedEmployee : pos,
           );
           this.employeesSubject.next(updatedEmployees);
-          alert(response.message);
         }
       });
   }
 
   addEmployee(newEmployee: Employee) {
     let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: this.authToken ? 'Bearer ' + this.authToken : '',
+      'Content-Type': 'application/json'
     });
 
     this.http
@@ -111,8 +104,7 @@ export class EmployeeService {
 
   deleteEmployee(id: number) {
     let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: this.authToken ? 'Bearer ' + this.authToken : '',
+      'Content-Type': 'application/json'
     });
 
     this.http

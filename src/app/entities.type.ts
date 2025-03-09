@@ -37,7 +37,7 @@ export interface Employee {
   surname: string;
   positionId: number;
   positionName: string;
-  dateOfBirth: Date;
+  birthDate: Date;
 }
 
 export interface User {

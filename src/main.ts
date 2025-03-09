@@ -12,6 +12,10 @@ import { authInterceptor } from './app/interceptors/auth.interceptor';
 import { AuthService } from './app/services/auth.service';
 import { HomeComponent } from './app/components/home/home.component';
 import { RenewPasswordComponent } from './app/components/renew-password/renew-password.component';
+import { ErrorHandler } from '@angular/core';
+import { GlobalErrorHandler } from './app/global-error-handler';
+import { errorHandlingInterceptor } from './app/interceptors/error-handling.interceptor';
+import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -27,8 +31,13 @@ export const routes: Routes = [
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideHttpClient(withInterceptors([authInterceptor])),
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    provideHttpClient(
+      withInterceptors([authInterceptor, errorHandlingInterceptor]),
+    ),
+    provideAnimationsAsync(),
     provideRouter(routes),
     AuthService,
   ],
 });
+

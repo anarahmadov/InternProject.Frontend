@@ -6,7 +6,12 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule],
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    CommonModule
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
@@ -19,18 +24,28 @@ export class AppComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
     this.authService.isAuthenticated$.subscribe((authState) => {
       this.isLoggedIn = authState;
     });
-    this.authService.permissions$.subscribe(permissions => {
-      this.showEmployeesLink = permissions.some(x => x.includes("EmployeeRead"));
-      this.showDepartmentsLink = permissions.some(x => x.includes("DepartmentRead"));
-      this.showPositionsLink = permissions.some(x => x.includes("PositionRead"));
+    this.authService.permissions$.subscribe((permissions) => {
+      this.showEmployeesLink = permissions.some((x) =>
+        x.includes('EmployeeRead'),
+      );
+      this.showDepartmentsLink = permissions.some((x) =>
+        x.includes('DepartmentRead'),
+      );
+      this.showPositionsLink = permissions.some((x) =>
+        x.includes('PositionRead'),
+      );
     });
+  }
+
+  throwClientError() {
+    throw new Error('I am a client error');
   }
 
   logOut() {

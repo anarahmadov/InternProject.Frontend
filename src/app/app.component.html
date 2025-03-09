@@ -45,6 +45,12 @@
                 <i class="menu-arrow"></i>
             </a>
         </li>
+        <li *ngIf="isLoggedIn" class="nav-item">
+            <a class="nav-link" (click)="throwClientError()">
+                <span class="menu-title">error</span>
+                <i class="menu-arrow"></i>
+            </a>
+        </li>
     </ul>
 </nav>
 
