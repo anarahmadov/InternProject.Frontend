@@ -16,7 +16,7 @@ export interface Subordinate {
   managerName: string;
   positionId: number;
   positionName: string;
-  dateOfBirth: Date;
+  birthDate: Date;
 }
 
 export interface Manager {

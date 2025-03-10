@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-context-menu',
@@ -16,6 +16,8 @@ export class ContextMenuComponent {
   @Output() openEmployees = new EventEmitter();
   @Output() openManagers = new EventEmitter();
   @Output() close = new EventEmitter();
+  @Input() hasEditPermission!: boolean;
+  @Input() hasDeletePermission!: boolean;
 
   onAction(action: string) {
     switch (action) {

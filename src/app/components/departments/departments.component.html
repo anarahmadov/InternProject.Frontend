@@ -1,7 +1,7 @@
 <div class="container mt-4">
   <div class="table-header d-flex">
     <h2 class="flex-grow-1">Departments</h2>
-    <button class="btn btn-success mb-3" (click)="openCreateModal()">+ Add Department</button>
+    <button *ngIf="showCreateButton" class="btn btn-success mb-3" (click)="openCreateModal()">+ Add Department</button>
   </div>
   <table class="table table-bordered table-striped">
     <thead>

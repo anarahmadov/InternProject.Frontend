@@ -9,8 +9,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="context-menu">
-                        <!-- <button class="btn" (click)="onAction('Edit')">Edit</button> -->
-                        <button class="btn" (click)="onAction('Delete')">Delete</button>
+                        <button *ngIf="hasEditPermission" class="btn" (click)="onAction('Edit')">Edit</button>
+                        <button *ngIf="hasDeletePermission" class="btn" (click)="onAction('Delete')">Delete</button>
                         <button class="btn" (click)="onAction('getAllEmployees')">See employees</button>
                         <button class="btn" (click)="onAction('getAllManagers')">See managers</button>
                     </div>

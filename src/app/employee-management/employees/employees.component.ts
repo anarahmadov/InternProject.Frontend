@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { Employee, Manager, Subordinate } from '../../entities.type';
 import { CommonModule } from '@angular/common';
 import { AppModalComponent } from '../../shared/modals/app-modal/app-modal.component';
@@ -20,7 +20,7 @@ import { AuthService } from '../../services/auth.service';
   ],
   providers: [EmployeeService],
 })
-export class EmployeesComponent implements AfterViewInit {
+export class EmployeesComponent implements AfterViewInit, OnInit {
   private employeeService: EmployeeService = inject(EmployeeService);
 
   subordinates: Subordinate[] = [];
@@ -38,9 +38,9 @@ export class EmployeesComponent implements AfterViewInit {
   modalTitle: string = '';
   modalFields = [{ name: 'name', label: 'Employee name', type: 'text' }];
 
-  showCreateButton!: boolean;
-  showDeleteButton!: boolean;
-  showEditButton!: boolean;
+  showCreateButton: boolean = false;
+  showDeleteButton: boolean = false;
+  showEditButton: boolean = false;
 
   @ViewChild('subordinatesTableModal')
   subordinatesTableModal!: TableModalComponent;
@@ -50,9 +50,9 @@ export class EmployeesComponent implements AfterViewInit {
 
   ngOnInit(): void {
     this.authService.permissions$.subscribe((permissions) => {
-      this.showCreateButton = permissions.some((x) => x == 'DepartmentCreate');
-      this.showDeleteButton = permissions.some((x) => x == 'DepartmentDelete');
-      this.showEditButton = permissions.some((x) => x == 'DepartmentUpdate');
+      this.showCreateButton = permissions.some((x) => x == 'EmployeeCreate');
+      this.showDeleteButton = permissions.some((x) => x == 'EmployeeDelete');
+      this.showEditButton = permissions.some((x) => x == 'EmployeeUpdate');
     });
   }
 

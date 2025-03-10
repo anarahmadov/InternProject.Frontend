@@ -25,13 +25,15 @@ export class DepartmentsComponent implements AfterViewInit, OnInit {
 
   showEditButton!: boolean;
   showDeleteButton!: boolean;
+  showCreateButton!: boolean;
 
   constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
     this.authService.permissions$.subscribe((permissions) => {
+      this.showCreateButton = permissions.some(x => x == "DepartmentCreate");
       this.showDeleteButton = permissions.some(x => x == "DepartmentDelete");
-      this.showEditButton = permissions.some(x=> x ==  "DepartmentUpdate");
+      this.showEditButton = permissions.some(x => x == "DepartmentUpdate");
     });
   }
 

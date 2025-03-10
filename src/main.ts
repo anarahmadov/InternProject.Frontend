@@ -15,7 +15,7 @@ import { RenewPasswordComponent } from './app/components/renew-password/renew-pa
 import { ErrorHandler } from '@angular/core';
 import { GlobalErrorHandler } from './app/global-error-handler';
 import { errorHandlingInterceptor } from './app/interceptors/error-handling.interceptor';
-import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
