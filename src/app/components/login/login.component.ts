@@ -52,10 +52,4 @@ export class LoginComponent implements OnInit {
       queryParams: { email: this.forgotPasswordSecurityCode },
     });
   }
-
-  forgotPassword() {
-    this.service.forgotPassword(this.loginForm.get('email')?.value).subscribe(value => {
-      
-    });
-  }
 }
