@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { CheckOldPasswordRequest, ForgotPasswordRequest, LoginRequest, RegisterRequest, RenewPasswordRequest } from '../request.type';
 import { LoginResponse, RegisterResponse } from '../response.type';
 import { ApiResult, ApiResultGen } from '../models/apiresult.model';
@@ -67,10 +67,6 @@ export class AuthService {
       .post<ApiResult>(`${this.apiUrl}/renewpassword`, request)
       .pipe(tap((response: ApiResult) => {}));
   }
-  checkOldPassword(request: CheckOldPasswordRequest): Observable<ApiResultGen<boolean>> {
-    console.log(request);
-    return this.http.post<ApiResultGen<boolean>>(`${this.apiUrl}/checkoldpassword`, {'email': request.email, 'password': request.password} );
-  }
   logout(): void {
     localStorage.removeItem('authToken');
     localStorage.removeItem('permissions');
@@ -86,8 +82,14 @@ export class AuthService {
     localStorage.setItem('permissions', JSON.stringify(permissions));
     this.permissionsSubject.next(permissions);
   }
-  hasPermission(permission: string): boolean {
-    return this.permissionsSubject.value.includes(permission);
+  hasPermission(requiredPermissions: string | string[]): boolean {
+    const userPermissions = this.permissionsSubject.getValue();
+    if (Array.isArray(requiredPermissions)) {
+      return requiredPermissions.every((perm) =>
+        userPermissions.includes(perm),
+      );
+    }
+    return userPermissions.includes(requiredPermissions);
   }
   includesPermission(permission: string) {
     return this.permissionsSubject.value.some((p) =>

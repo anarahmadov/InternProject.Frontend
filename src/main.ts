@@ -16,17 +16,35 @@ import { ErrorHandler } from '@angular/core';
 import { GlobalErrorHandler } from './app/global-error-handler';
 import { errorHandlingInterceptor } from './app/interceptors/error-handling.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { permissionsGuard } from './app/auth/permissions.guard';
+import { AccessDeniedComponent } from './app/components/access-denied/access-denied.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
+  { path: 'access-denied', component: AccessDeniedComponent },
   { path: 'home', component: HomeComponent },
-  { path: 'employees', component: EmployeesComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'forgotpassword', component: ForgotPasswordComponent },
   { path: 'renewpassword', component: RenewPasswordComponent },
-  { path: 'departments', component: DepartmentsComponent },
-  { path: 'positions', component: PositionsComponent },
+  {
+    path: 'employees',
+    component: EmployeesComponent,
+    canActivate: [permissionsGuard],
+    data: { permissions: ['EmployeeRead'] },
+  },
+  {
+    path: 'departments',
+    component: DepartmentsComponent,
+    canActivate: [permissionsGuard],
+    data: { permissions: ['DepartmentRead'] },
+  },
+  {
+    path: 'positions',
+    component: PositionsComponent,
+    canActivate: [permissionsGuard],
+    data: { permissions: ['PositionRead'] },
+  },
 ];
 
 bootstrapApplication(AppComponent, {
