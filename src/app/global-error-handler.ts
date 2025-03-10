@@ -12,10 +12,11 @@ export class GlobalErrorHandler implements ErrorHandler {
     if (error instanceof HttpErrorResponse) {
       // Serve error
       notifier.openServerErrorDialog(error.message);
-    } else if (error instanceof Error) {
-      // client error
-      message = error.message ? error.message : error.toString();
-      notifier.showClientError(message);
+    }
+    else {
+        // client error
+        message = error.message ? error.message : error.toString();
+        notifier.showClientError(message);
     }
   }
 }
