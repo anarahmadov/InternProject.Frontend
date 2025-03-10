@@ -45,6 +45,8 @@ export const routes: Routes = [
     canActivate: [permissionsGuard],
     data: { permissions: ['PositionRead'] },
   },
+  { path: 'access-denied', component: AccessDeniedComponent }, // Your error page
+  { path: '**', redirectTo: '/access-denied', pathMatch: 'full' },
 ];
 
 bootstrapApplication(AppComponent, {
