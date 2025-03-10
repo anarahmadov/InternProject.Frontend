@@ -21,13 +21,24 @@ export class AuthService {
 
   private loadAuthState(): boolean {
     const storedToken = localStorage.getItem('authToken');
-    return storedToken ? true : false;
+    if (storedToken != null && !this.isTokenExpired(storedToken)) {
+      return true;
+    }
+    return false;
   }
   private loadPermissions(): string[] {
     const storedPermissions = localStorage.getItem('permissions');
     return storedPermissions ? JSON.parse(storedPermissions) : [];
   }
 
+  private isTokenExpired(token: string): boolean {
+    try {
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      return decodedToken.exp * 1000 < Date.now();
+    } catch (error) {
+      return true;
+    }
+  }
   login(request: LoginRequest): Observable<ApiResultGen<LoginResponse>> {
     return this.http
       .post<ApiResultGen<LoginResponse>>(`${this.apiUrl}/login`, request)

@@ -18,6 +18,7 @@ import { errorHandlingInterceptor } from './app/interceptors/error-handling.inte
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { permissionsGuard } from './app/auth/permissions.guard';
 import { AccessDeniedComponent } from './app/components/access-denied/access-denied.component';
+import { authGuard } from './app/auth/auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -30,23 +31,23 @@ export const routes: Routes = [
   {
     path: 'employees',
     component: EmployeesComponent,
-    canActivate: [permissionsGuard],
+    canActivate: [authGuard, permissionsGuard],
     data: { permissions: ['EmployeeRead'] },
   },
   {
     path: 'departments',
     component: DepartmentsComponent,
-    canActivate: [permissionsGuard],
+    canActivate: [authGuard, permissionsGuard],
     data: { permissions: ['DepartmentRead'] },
   },
   {
     path: 'positions',
     component: PositionsComponent,
-    canActivate: [permissionsGuard],
+    canActivate: [authGuard, permissionsGuard],
     data: { permissions: ['PositionRead'] },
   },
-  { path: 'access-denied', component: AccessDeniedComponent }, // Your error page
-  { path: '**', redirectTo: '/access-denied', pathMatch: 'full' },
+  { path: 'access-denied', component: AccessDeniedComponent },
+  { path: '**', redirectTo: '/access-denied' },
 ];
 
 bootstrapApplication(AppComponent, {
