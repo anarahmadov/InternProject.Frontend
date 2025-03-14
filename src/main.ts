@@ -34,6 +34,15 @@ export const routes: Routes = [
     canActivate: [authGuard, permissionsGuard],
     data: { permissions: ['EmployeeRead'] },
   },
+  // {
+  //   path: 'employee-management',
+  //   loadChildren: () =>
+  //     import(
+  //       '../src/app/employee-management/employee-management-routing.module'
+  //     ).then((m) => m.EmployeeManagementRoutingModule),
+  //   canActivate: [authGuard, permissionsGuard],
+  //   data: { permissions: ['EmployeeRead'] },
+  // },
   {
     path: 'departments',
     component: DepartmentsComponent,
@@ -61,4 +70,3 @@ bootstrapApplication(AppComponent, {
     AuthService,
   ],
 });
-
