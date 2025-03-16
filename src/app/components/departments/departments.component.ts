@@ -43,7 +43,7 @@ export class DepartmentsComponent implements AfterViewInit, OnInit {
 
   loadDepartments() {
     this.departmentService.loadDepartments();
-    this.departmentService.deparments$.subscribe((departments) => {
+    this.departmentService.datas.subscribe((departments) => {
       this.departments = departments;
     });
   }
@@ -71,7 +71,7 @@ export class DepartmentsComponent implements AfterViewInit, OnInit {
   }
 
   onCreate(departmentData: Department) {
-    this.departmentService.addDepartment(departmentData);
+    this.departmentService.add(departmentData);
     this.isCreateOpen = false;
   }
 
@@ -84,7 +84,7 @@ export class DepartmentsComponent implements AfterViewInit, OnInit {
 
   onDelete(id?: number) {
     if (id) {
-      this.departmentService.deleteDepartment(id);
+      this.departmentService.deleteDep(id);
       this.isDeleteOpen = false;
     }
   }

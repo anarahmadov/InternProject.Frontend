@@ -44,13 +44,13 @@ export class TableModalComponent {
     switch (query) {
       case 'Employees':
         this.employeeService.getAllEmployeesByManager(this.selectedItemId);
-        this.employeeService.employees$.subscribe((value) => {
+        this.employeeService.datas.subscribe((value) => {
           this.subordinates = value;
         });
         break;
       case 'Managers':
         this.employeeService.getManagers(this.selectedItemId);
-        this.employeeService.employees$.subscribe((value) => {
+        this.employeeService.datas.subscribe((value) => {
           this.managers = value;
         });
         break;

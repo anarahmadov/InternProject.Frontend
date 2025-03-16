@@ -1,6 +1,10 @@
+export interface Entity {
+  id: number;
+}
+
 export interface Position {
-  id: number,
-  name: string
+  id: number;
+  name: string;
 }
 
 export interface Department {
@@ -41,9 +45,9 @@ export interface Employee {
 }
 
 export interface User {
-  id: number, 
-  name: string,
-  surname: string,
-  email: string,
-  accessToken: string
+  id: number;
+  name: string;
+  surname: string;
+  email: string;
+  accessToken: string;
 }

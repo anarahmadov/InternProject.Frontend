@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Permission } from '../models/permissions.model';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class PermissionsService {
-  private userPermissions: Permission[] = []; 
+  private permissions: Permission[] = []; 
 
   constructor() {
-
-    this.userPermissions = [
+    this.permissions = [
       Permission.UserCreate,
       Permission.UserRead,
       Permission.UserUpdate,
@@ -36,9 +33,5 @@ export class PermissionsService {
       Permission.PositionUpdate,
       Permission.PositionDeletes
     ];
-  }
-
-  hasPermission(permission: Permission): boolean {
-    return this.userPermissions.includes(permission);
   }
 }

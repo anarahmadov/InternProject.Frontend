@@ -40,7 +40,7 @@ export class PositionsComponent implements OnInit {
 
   loadPositions() {
     this.positionService.loadPositions();
-    this.positionService.positions$.subscribe((positions) => {
+    this.positionService.datas.subscribe((positions) => {
       this.positions = positions;
     });
   }
@@ -68,7 +68,7 @@ export class PositionsComponent implements OnInit {
   }
 
   onCreate(positionData: Position) {
-    this.positionService.addPosition(positionData);
+    this.positionService.add(positionData);
     this.isCreateOpen = false;
   }
 
@@ -81,7 +81,7 @@ export class PositionsComponent implements OnInit {
 
   onDelete(id?: number) {
     if (id) {
-      this.positionService.deletePosition(id);
+      this.positionService.deletePos(id);
       this.isDeleteOpen = false;
     }
   }

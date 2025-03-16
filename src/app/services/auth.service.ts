@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { CheckOldPasswordRequest, ForgotPasswordRequest, LoginRequest, RegisterRequest, RenewPasswordRequest } from '../request.type';
+import { ForgotPasswordRequest, LoginRequest, RegisterRequest, RenewPasswordRequest } from '../request.type';
 import { LoginResponse, RegisterResponse } from '../response.type';
 import { ApiResult, ApiResultGen } from '../models/apiresult.model';
 
@@ -19,13 +19,13 @@ export class AuthService {
   );
   permissions$ = this.permissionsSubject.asObservable();
 
+  
   private loadAuthState(): boolean {
     const storedToken = localStorage.getItem('authToken');
-    if (storedToken != null && !this.isTokenExpired(storedToken)) {
-      return true;
-    }
+    if (storedToken != null && !this.isTokenExpired(storedToken)) return true;
     return false;
   }
+
   private loadPermissions(): string[] {
     const storedPermissions = localStorage.getItem('permissions');
     return storedPermissions ? JSON.parse(storedPermissions) : [];
@@ -39,6 +39,8 @@ export class AuthService {
       return true;
     }
   }
+  
+
   login(request: LoginRequest): Observable<ApiResultGen<LoginResponse>> {
     return this.http
       .post<ApiResultGen<LoginResponse>>(`${this.apiUrl}/login`, request)
@@ -54,6 +56,7 @@ export class AuthService {
         }),
       );
   }
+
   register(
     request: RegisterRequest,
   ): Observable<ApiResultGen<RegisterResponse>> {
@@ -66,6 +69,7 @@ export class AuthService {
         }),
       );
   }
+
   forgotPassword(
     request: ForgotPasswordRequest,
   ): Observable<ApiResultGen<string>> {
@@ -73,11 +77,13 @@ export class AuthService {
       .post<ApiResultGen<string>>(`${this.apiUrl}/forgotpassword`, request)
       .pipe(tap((response: ApiResultGen<string>) => {}));
   }
+
   renewPassword(request: RenewPasswordRequest): Observable<ApiResult> {
     return this.http
       .post<ApiResult>(`${this.apiUrl}/renewpassword`, request)
       .pipe(tap((response: ApiResult) => {}));
   }
+
   logout(): void {
     localStorage.removeItem('authToken');
     localStorage.removeItem('permissions');
@@ -85,14 +91,17 @@ export class AuthService {
     this.isAuthenticatedSubject.next(false);
   }
 
+
   setAuthToken(token: string) {
     localStorage.setItem('authToken', token);
     this.isAuthenticatedSubject.next(true);
   }
+
   setPermissions(permissions: string[]) {
     localStorage.setItem('permissions', JSON.stringify(permissions));
     this.permissionsSubject.next(permissions);
   }
+
   hasPermission(requiredPermissions: string | string[]): boolean {
     const userPermissions = this.permissionsSubject.getValue();
     if (Array.isArray(requiredPermissions)) {
@@ -102,6 +111,7 @@ export class AuthService {
     }
     return userPermissions.includes(requiredPermissions);
   }
+
   includesPermission(permission: string) {
     return this.permissionsSubject.value.some((p) =>
       p.toLowerCase().includes(permission.toLowerCase()),

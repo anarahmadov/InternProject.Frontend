@@ -1,121 +1,36 @@
-import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Subordinate, Manager, Employee } from '../entities.type';
-import { BehaviorSubject, catchError, throwError } from 'rxjs';
-import { ApiResult, ApiResultGen } from '../models/apiresult.model';
-import { EmployeesComponent } from '../employee-management/employees/employees.component';
+import { HttpService } from './http-service.service';
 
 @Injectable()
-export class EmployeeService {
+export class EmployeeService extends HttpService {
   private apiUrl: string = 'https://localhost:7247/api/employees';
-  private http: HttpClient = inject(HttpClient);
-  private employeesSubject = new BehaviorSubject<any[]>([]);
-  employees$ = this.employeesSubject.asObservable();
 
   loadEmployees() {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    this.http
-      .get<ApiResultGen<Employee[]>>(`${this.apiUrl}/all`, { headers })
-      .subscribe((response) => {
-        if (response.succeeded) this.employeesSubject.next(response.result);
-      });
+    this.getAll<Employee[]>(`${this.apiUrl}/all`);
   }
 
   getManagers(employeeId: number) {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    this.http
-      .get<ApiResultGen<Manager[]>>(`${this.apiUrl}/${employeeId}/managers`, { headers })
-      .subscribe((response) => {
-        if (response.succeeded) this.employeesSubject.next(response.result);
-      });
+    this.getAll<Manager[]>(`${this.apiUrl}/${employeeId}/managers`);
   }
 
   getAllEmployeesByManager(managerId: number) {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    this.http
-      .get<
-        ApiResultGen<Subordinate[]>
-      >(`${this.apiUrl}/${managerId}/subordinates/all`, { headers })
-      .subscribe((response) => {
-        if (response.succeeded) this.employeesSubject.next(response.result);
-      });
+    this.getAll<Subordinate[]>(`${this.apiUrl}/${managerId}/subordinates/all`);
   }
 
   getEmployeesByManager(managerId: number) {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    this.http
-      .get<
-        ApiResultGen<Subordinate[]>
-      >(`${this.apiUrl}/${managerId}/subordinates/all`, { headers })
-      .subscribe((response) => {
-        if (response.succeeded) this.employeesSubject.next(response.result);
-      });
+    this.getAll<Subordinate[]>(`${this.apiUrl}/${managerId}/subordinates`);
   }
 
-  edit(employeee: Employee) {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    this.http
-      .put<ApiResultGen<Employee>>(this.apiUrl, employeee, { headers })
-      .subscribe((response) => {
-        if (response.succeeded) {
-          let updatedEmployee = response.result;
-          const updatedEmployees = this.employeesSubject.value.map((pos) =>
-            pos.id === employeee.id ? updatedEmployee : pos,
-          );
-          this.employeesSubject.next(updatedEmployees);
-        }
-      });
+  edit(employee: Employee) {
+    this.put<Employee>(this.apiUrl, employee);
   }
 
-  addEmployee(newEmployee: Employee) {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    this.http
-      .post<ApiResultGen<Employee>>(this.apiUrl, newEmployee, { headers })
-      .subscribe((response) => {
-        if (response.succeeded) {
-          let addedEmployee = response.result;
-          const updatedEmployees = [
-            ...this.employeesSubject.value,
-            addedEmployee,
-          ];
-          this.employeesSubject.next(updatedEmployees);
-          alert(response.message);
-        }
-      });
+  add(employee: Employee) {
+    this.post<Employee>(this.apiUrl, employee);
   }
 
-  deleteEmployee(id: number) {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    this.http
-      .delete<ApiResult>(`${this.apiUrl}/${id}`, { headers })
-      .subscribe((response) => {
-        if (response.succeeded) {
-          const updatedEmployees = this.employeesSubject.value.filter(
-            (p) => p.id !== id,
-          );
-          this.employeesSubject.next(updatedEmployees);
-        }
-      });
+  deleteEmp(id: number) {
+    this.delete<Employee>(`${this.apiUrl}/${id}`);
   }
 }

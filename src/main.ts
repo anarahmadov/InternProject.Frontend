@@ -19,6 +19,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { permissionsGuard } from './app/auth/permissions.guard';
 import { AccessDeniedComponent } from './app/components/access-denied/access-denied.component';
 import { authGuard } from './app/auth/auth.guard';
+import { PermissionsService } from './app/services/permissions.service';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -34,15 +35,6 @@ export const routes: Routes = [
     canActivate: [authGuard, permissionsGuard],
     data: { permissions: ['EmployeeRead'] },
   },
-  // {
-  //   path: 'employee-management',
-  //   loadChildren: () =>
-  //     import(
-  //       '../src/app/employee-management/employee-management-routing.module'
-  //     ).then((m) => m.EmployeeManagementRoutingModule),
-  //   canActivate: [authGuard, permissionsGuard],
-  //   data: { permissions: ['EmployeeRead'] },
-  // },
   {
     path: 'departments',
     component: DepartmentsComponent,
@@ -68,5 +60,6 @@ bootstrapApplication(AppComponent, {
     provideAnimationsAsync(),
     provideRouter(routes),
     AuthService,
+    PermissionsService
   ],
 });

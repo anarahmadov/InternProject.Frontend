@@ -61,7 +61,7 @@ export class EmployeesComponent implements AfterViewInit, OnInit {
   }
   loadEmployees() {
     this.employeeService.loadEmployees();
-    this.employeeService.employees$.subscribe((employees) => {
+    this.employeeService.datas.subscribe((employees) => {
       this.employees = employees;
     });
   }
@@ -125,7 +125,7 @@ export class EmployeesComponent implements AfterViewInit, OnInit {
   }
 
   onCreate(employeeData: Employee) {
-    this.employeeService.addEmployee(employeeData);
+    this.employeeService.add(employeeData);
     this.isCreateOpen = false;
   }
   onUpdate(employeeData: Employee) {
@@ -136,7 +136,7 @@ export class EmployeesComponent implements AfterViewInit, OnInit {
   }
   onDelete(id?: number) {
     if (id) {
-      this.employeeService.deleteEmployee(id);
+      this.employeeService.deleteEmp(id);
       this.isDeleteOpen = false;
     }
   }
