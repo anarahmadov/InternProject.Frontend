@@ -9,10 +9,9 @@ import { ForgotPasswordComponent } from './app/components/forgotpassword/forgotp
 import { EmployeesComponent } from './app/employee-management/employees/employees.component';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './app/interceptors/auth.interceptor';
-import { AuthService } from './app/services/auth.service';
 import { HomeComponent } from './app/components/home/home.component';
 import { RenewPasswordComponent } from './app/components/renew-password/renew-password.component';
-import { ErrorHandler } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, inject } from '@angular/core';
 import { GlobalErrorHandler } from './app/global-error-handler';
 import { errorHandlingInterceptor } from './app/interceptors/error-handling.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -20,6 +19,8 @@ import { permissionsGuard } from './app/auth/permissions.guard';
 import { AccessDeniedComponent } from './app/components/access-denied/access-denied.component';
 import { authGuard } from './app/auth/auth.guard';
 import { PermissionsService } from './app/services/permissions.service';
+import { firstValueFrom } from 'rxjs';
+import { AuthService } from './app/services/auth.service';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -51,6 +52,15 @@ export const routes: Routes = [
   { path: '**', redirectTo: '/access-denied' },
 ];
 
+export function initializeAppFactory(
+  permissionsService: PermissionsService,
+): () => Promise<void> {
+  return () =>
+    firstValueFrom(permissionsService.loadPermissions()).then(
+      (permissions) => {},
+    );
+}
+
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
@@ -60,6 +70,12 @@ bootstrapApplication(AppComponent, {
     provideAnimationsAsync(),
     provideRouter(routes),
     AuthService,
-    PermissionsService
+    PermissionsService,
+    {
+      provide: APP_INITIALIZER,
+      useValue: initializeAppFactory,
+      deps: [PermissionsService],
+      multi: true,
+    },
   ],
 });

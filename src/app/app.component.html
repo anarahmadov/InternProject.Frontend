@@ -19,26 +19,28 @@
                 <i class="menu-arrow"></i>
             </a>
         </li>
-        <li *ngIf="isLoggedIn && showEmployeesLink" class="nav-item">
-            <a class="nav-link" routerLink="employees" routerLinkActive="active">
-                <i class="mdi mdi-grid-large menu-icon"></i>
-                <span class="menu-title">Employees</span>
-            </a>
-        </li>
-        <li *ngIf="isLoggedIn && showPositionsLink" class="nav-item">
-            <a class="nav-link" routerLink="positions">
-                <i class="menu-icon mdi mdi-chart-line"></i>
-                <span class="menu-title">Positions</span>
-                <i class="menu-arrow"></i>
-            </a>
-        </li>
-        <li *ngIf="isLoggedIn && showDepartmentsLink" class="nav-item">
-            <a class="nav-link" routerLink="departments">
-                <i class="menu-icon mdi mdi-table"></i>
-                <span class="menu-title">Departments</span>
-                <i class="menu-arrow"></i>
-            </a>
-        </li>
+        @if(isLoggedIn) {
+            <li *hasPermission="'EmployeeRead'" class="nav-item">
+                <a class="nav-link" routerLink="employees" routerLinkActive="active">
+                    <i class="mdi mdi-grid-large menu-icon"></i>
+                    <span class="menu-title">Employees</span>
+                </a>
+            </li>
+            <li *hasPermission="'PositionRead'" class="nav-item">
+                <a class="nav-link" routerLink="positions">
+                    <i class="menu-icon mdi mdi-chart-line"></i>
+                    <span class="menu-title">Positions</span>
+                    <i class="menu-arrow"></i>
+                </a>
+            </li>
+            <li *hasPermission="'DepartmentRead'" class="nav-item">
+                <a class="nav-link" routerLink="departments">
+                    <i class="menu-icon mdi mdi-table"></i>
+                    <span class="menu-title">Departments</span>
+                    <i class="menu-arrow"></i>
+                </a>
+            </li>
+        }
         <li *ngIf="isLoggedIn" class="nav-item">
             <a class="nav-link" (click)="logOut()" routerLinkActive="active">
                 <span class="menu-title">Logout</span>

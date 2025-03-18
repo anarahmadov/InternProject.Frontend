@@ -1,5 +1,4 @@
 import { Component, Inject } from '@angular/core';
-import { MatIconAnchor, MatIconButton } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent } from '@angular/material/dialog';
 
 @Component({
@@ -18,6 +17,6 @@ import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent } from '@angular/ma
   `,
 })
 export class ErrorHandlerDialogComponent {
-  public title = 'Network Error';
+  public title = 'Server Error';
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
 }

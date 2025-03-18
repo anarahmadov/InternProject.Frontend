@@ -19,7 +19,11 @@ export class AuthService {
   );
   permissions$ = this.permissionsSubject.asObservable();
 
-  
+  constructor() {
+    this.isAuthenticatedSubject.next(this.loadAuthState());
+    this.permissionsSubject.next(this.loadPermissions());
+  }
+
   private loadAuthState(): boolean {
     const storedToken = localStorage.getItem('authToken');
     if (storedToken != null && !this.isTokenExpired(storedToken)) return true;
