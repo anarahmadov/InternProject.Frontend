@@ -38,15 +38,13 @@ export class AppModalComponent implements OnChanges {
   }
 
   saveChanges(isConfirm: boolean) {
-    if (!isConfirm) {
-      if (this.modalForm.valid) {
-        const updatedPosition = {
-          ...this.selectedItem,
-          name: this.modalForm.value.name,
-        };
-        this.save.emit(updatedPosition);
-        this.isOpen = false;
-      }
+    if (!isConfirm && this.modalForm.valid) {
+      const updatedPosition = {
+        ...this.selectedItem,
+        name: this.modalForm.value.name,
+      };
+      this.save.emit(updatedPosition);
+      this.isOpen = false;
     } else {
       this.save.emit(this.selectedItem?.id);
       this.isOpen = false;

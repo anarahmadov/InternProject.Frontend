@@ -3,14 +3,14 @@ import { PositionService } from '../../services/position.service';
 import { Position } from '../../entities.type';
 import { CommonModule } from '@angular/common';
 import { AppModalComponent } from '../../shared/modals/app-modal/app-modal.component';
-import { AuthService } from '../../services/auth.service';
+import { HasPermissionDirective } from '../../directives/has-permission.directive';
 
 @Component({
   selector: 'app-positions',
   templateUrl: './positions.component.html',
   styleUrls: ['./positions.component.scss'],
   standalone: true,
-  imports: [CommonModule, AppModalComponent],
+  imports: [CommonModule, AppModalComponent, HasPermissionDirective],
   providers: [PositionService],
 })
 export class PositionsComponent implements OnInit {
@@ -23,19 +23,8 @@ export class PositionsComponent implements OnInit {
   isDeleteOpen: boolean = false;
   modalFields = [{ name: 'name', label: 'Position name', type: 'text' }];
 
-  showEditButton!: boolean;
-  showDeleteButton!: boolean;
-  showCreateButton!: boolean;
-
-  constructor(private authService: AuthService) { }
-
   ngOnInit(): void {
     this.loadPositions();
-    this.authService.permissions$.subscribe((permissions) => {
-      this.showCreateButton = permissions.some(x => x == "PositionCreate");
-      this.showDeleteButton = permissions.some((x) => x == 'PositionDelete');
-      this.showEditButton = permissions.some((x) => x == 'PositionUpdate');
-    });
   }
 
   loadPositions() {

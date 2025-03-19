@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -39,22 +39,21 @@ export class ForgotPasswordComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.formStatus) {
-      if (this.forgotPasswordForm.valid) {
-        this.submittedForgotPasswordForm = true;
-        this.email = this.forgotPasswordForm.get('email')?.value;
-        this.authService
-          .forgotPassword(this.forgotPasswordForm.getRawValue())
-          .subscribe((response) => {
-            if (response && response.succeeded) {
-              this.code = response.result;
-            }
-          });
-        this.formStatus = false;
-        this.securityCodeForm = this.fb.group({
-          securityCode: ['', [Validators.required]],
+    if (this.formStatus && this.forgotPasswordForm.valid) {
+      this.submittedForgotPasswordForm = true;
+      this.email = this.forgotPasswordForm.get('email')?.value;
+      this.authService
+        .forgotPassword(this.forgotPasswordForm.getRawValue())
+        .subscribe((response) => {
+          if (response && response.succeeded) {
+            this.code = response.result;
+          }
         });
-      }
+      this.formStatus = false;
+      this.securityCodeForm = this.fb.group({
+        securityCode: ['', [Validators.required]],
+      });
+      
     } else {
       if (this.securityCodeForm.valid) {
         this.submittedSecurityCodeForm = true;

@@ -6,6 +6,7 @@ import { EmployeeService } from '../../services/employee.service';
 import { ContextMenuComponent } from '../context-menu/context-menu.component';
 import { TableModalComponent } from "../../shared/modals/table-modal/table-modal.component";
 import { AuthService } from '../../services/auth.service';
+import { HasPermissionDirective } from '../../directives/has-permission.directive';
 
 @Component({
   selector: 'app-employees',
@@ -16,7 +17,7 @@ import { AuthService } from '../../services/auth.service';
     CommonModule,
     AppModalComponent,
     TableModalComponent,
-    ContextMenuComponent,
+    ContextMenuComponent
   ],
   providers: [EmployeeService],
 })
@@ -59,6 +60,7 @@ export class EmployeesComponent implements AfterViewInit, OnInit {
   ngAfterViewInit() {
     this.loadEmployees();
   }
+
   loadEmployees() {
     this.employeeService.loadEmployees();
     this.employeeService.datas.subscribe((employees) => {
@@ -66,35 +68,41 @@ export class EmployeesComponent implements AfterViewInit, OnInit {
     });
   }
 
+
   openCreateModal() {
     this.modalTitle = 'Add new employee';
     this.selectedEmployee = undefined;
     this.isContextMenuOpen = false;
     this.isCreateOpen = true;
   }
+
   openUpdateModal(employee: Employee) {
     this.modalTitle = 'Update employee';
     this.selectedEmployee = employee;
     this.isContextMenuOpen = false;
     this.isUpdateOpen = true;
   }
+
   openDeleteModal() {
     this.modalTitle = 'Are you sure you want to delete this employee?';
     this.isContextMenuOpen = false;
     this.isDeleteOpen = true;
   }
+
   openManagersTableModal(selectedData: Employee) {
     this.selectedEmployee = selectedData;
     this.modalTitle = 'Managers';
     this.managersTableModal.open(this.modalTitle);
     this.isManagersTableModalOpen = true;
   }
+
   openEmployeesTableModal(selectedData: Employee) {
     this.selectedEmployee = selectedData;
     this.modalTitle = 'Employees';
     this.subordinatesTableModal.open(this.modalTitle);
     this.isEmployeesTableModalOpen = true;
   }
+
   openContextMenu(employee: Employee | undefined) {
     this.selectedEmployee = employee;
     this.isCreateOpen = false;
@@ -104,6 +112,7 @@ export class EmployeesComponent implements AfterViewInit, OnInit {
     this.isManagersTableModalOpen = false;
     this.isContextMenuOpen = true;
   }
+
   closeModal() {
     this.selectedEmployee = undefined;
     this.isCreateOpen = false;
@@ -113,6 +122,8 @@ export class EmployeesComponent implements AfterViewInit, OnInit {
     this.isManagersTableModalOpen = false;
     this.isContextMenuOpen = false;
   }
+
+
   onSelectedItemChange(selectedData: Employee) {
     this.selectedEmployee = selectedData;
   }
@@ -120,20 +131,24 @@ export class EmployeesComponent implements AfterViewInit, OnInit {
   onGetAllManagers(employeeId: number) {
     this.employeeService.getAllEmployeesByManager(employeeId);
   }
+
   onGetAllEmployeesByManager(managerId: number) {
     this.employeeService.getAllEmployeesByManager(managerId);
   }
+
 
   onCreate(employeeData: Employee) {
     this.employeeService.add(employeeData);
     this.isCreateOpen = false;
   }
+
   onUpdate(employeeData: Employee) {
     if (this.selectedEmployee) {
       this.employeeService.edit(employeeData);
     }
     this.isUpdateOpen = false;
   }
+  
   onDelete(id?: number) {
     if (id) {
       this.employeeService.deleteEmp(id);
