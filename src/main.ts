@@ -19,7 +19,6 @@ import { permissionsGuard } from './app/auth/permissions.guard';
 import { AccessDeniedComponent } from './app/components/access-denied/access-denied.component';
 import { authGuard } from './app/auth/auth.guard';
 import { PermissionsService } from './app/services/permissions.service';
-import { firstValueFrom } from 'rxjs';
 import { AuthService } from './app/services/auth.service';
 
 export const routes: Routes = [
@@ -52,13 +51,14 @@ export const routes: Routes = [
   { path: '**', redirectTo: '/access-denied' },
 ];
 
-export function initializeAppFactory(
-  permissionsService: PermissionsService,
-): () => Promise<void> {
-  return () =>
-    firstValueFrom(permissionsService.loadPermissions()).then(
-      (permissions) => {},
-    );
+export function initializeAppFactory(): () => void {
+  let authService = inject(AuthService);
+
+  return () => {  
+    authService.userPermissions().subscribe(data => {
+      authService.setPermissions(data.result);  
+    });
+  }
 }
 
 bootstrapApplication(AppComponent, {
@@ -73,8 +73,8 @@ bootstrapApplication(AppComponent, {
     PermissionsService,
     {
       provide: APP_INITIALIZER,
-      useValue: initializeAppFactory,
-      deps: [PermissionsService],
+      useFactory: initializeAppFactory,
+      deps: [AuthService],
       multi: true,
     },
   ],

@@ -19,11 +19,6 @@ export class AuthService {
   );
   permissions$ = this.permissionsSubject.asObservable();
 
-  constructor() {
-    this.isAuthenticatedSubject.next(this.loadAuthState());
-    this.permissionsSubject.next(this.loadPermissions());
-  }
-
   private loadAuthState(): boolean {
     const storedToken = localStorage.getItem('authToken');
     if (storedToken != null && !this.isTokenExpired(storedToken)) return true;
@@ -43,7 +38,18 @@ export class AuthService {
       return true;
     }
   }
-  
+
+  userPermissions(): Observable<ApiResultGen<string[]>> {
+    return this.http
+      .get<ApiResultGen<string[]>>(`${this.apiUrl}/my-permissions`)
+      .pipe(
+        tap((response: ApiResultGen<string[]>) => {
+          if (response && response.succeeded) {
+            this.permissionsSubject.next(response.result);
+          }
+        }),
+      );
+  }
 
   login(request: LoginRequest): Observable<ApiResultGen<LoginResponse>> {
     return this.http
@@ -53,6 +59,7 @@ export class AuthService {
           if (response && response.succeeded) {
             this.setAuthToken(response.result.accessToken);
             this.setPermissions(response.result.permissions);
+            localStorage.setItem('userId', response.result.userId.toString())
             return response.result;
           } else {
             return response.message;

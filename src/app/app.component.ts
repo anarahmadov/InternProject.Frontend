@@ -13,7 +13,6 @@ import { HasPermissionDirective } from './directives/has-permission.directive';
     RouterLinkActive,
     CommonModule,
     HasPermissionDirective
-    // HasPermissionPipe
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
